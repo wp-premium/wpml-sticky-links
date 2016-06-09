@@ -10,9 +10,17 @@ class WPML_Sticky_Links{
 	var $absolute_links_object;
 
 	function __construct( $ext = false ) {
+		$this->settings = get_option( 'alp_settings' );
+
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 		//init WPML_Sticky_Links after init AbsoluteLinks
 		add_action( 'init', array( $this, 'init' ) , 1001 );
+
+		if ( $this->settings['sticky_links_strings'] ) {
+			// Add this hook early so WPML_Admin_Texts can check for the filter in it's constructor
+			add_filter( 'wpml_sticky_link_string', array( $this, 'show_permalinks' ) );
+		}
+		
 	}
 
 	function __destruct() {
@@ -20,7 +28,6 @@ class WPML_Sticky_Links{
 	}
 
 	function plugins_loaded() {
-		$this->settings = get_option( 'alp_settings' );
 		// Check if WPML is active. If not display warning message and not load Sticky links
 
 		if ( defined( 'ICL_PLUGIN_PATH' ) ) {

@@ -1,3 +1,11 @@
+# 1.3.18
+
+##Fixes
+* [wpmlst-695] Fix performance issue when checking fo sticky links plugin
+
+##Performances
+* [wpmlcore-2988] Removed unneeded dependencies checks in admin pages: this now runs only once and later only when activating/deactivating plugins
+
 # 1.3.17
 
 ##Fixes
