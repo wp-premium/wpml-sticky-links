@@ -1,3 +1,8 @@
+# 1.3.19
+
+## Fixes
+* [wpmlcore-3030] Class auto loading is not compatible with version of PHP older than 5.3
+
 # 1.3.18
 
 ##Fixes
