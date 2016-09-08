@@ -38,7 +38,6 @@ $total_posts_pages_processed = (int) $wpdb->get_var(
 
 <div class="wrap">
 
-    <div id="icon-wpml" class="icon32"><br /></div>
     <h2><?php echo __('Setup Sticky Links', 'wpml-sticky-links') ?></h2>    
     
     <h3><?php _e('Options', 'wpml-sticky-links')?></h3>
@@ -50,13 +49,6 @@ $total_posts_pages_processed = (int) $wpdb->get_var(
             <?php if($this->settings['sticky_links_widgets']):?>checked="checked"<?php endif;?>  />
             &nbsp;<?php _e('Turn links in text widgets to Sticky', 'wpml-sticky-links')?></label>
         </li>
-        <?php if(defined('ICL_SITEPRESS_VERSION')): ?>
-        <li>
-            <label><input type="checkbox" name="icl_sticky_links_strings" value="1"
-            <?php if($this->settings['sticky_links_strings']):?>checked="checked"<?php endif;?>  />
-            &nbsp;<?php _e("Turn links in WPML's string Translation to Sticky", 'wpml-sticky-links')?></label>
-        </li>
-        <?php endif; ?>
     </ul>
     <p>
         <a class="button" name="save" id="save" href="#"><?php echo __('Apply','wpml-sticky-links') ?></a>

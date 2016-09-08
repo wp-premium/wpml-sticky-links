@@ -15,16 +15,7 @@ class WPML_Sticky_Links{
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 		//init WPML_Sticky_Links after init AbsoluteLinks
 		add_action( 'init', array( $this, 'init' ) , 1001 );
-
-		if ( $this->settings['sticky_links_strings'] ) {
-			// Add this hook early so WPML_Admin_Texts can check for the filter in it's constructor
-			add_filter( 'wpml_sticky_link_string', array( $this, 'show_permalinks' ) );
-		}
-		
-	}
-
-	function __destruct() {
-		return;
+		add_action( 'init', array( $this, 'plugin_localization' ) );
 	}
 
 	function plugins_loaded() {
@@ -34,15 +25,12 @@ class WPML_Sticky_Links{
 			require_once ICL_PLUGIN_PATH . '/inc/absolute-links/absolute-links.class.php';
 			$this->absolute_links_object = new AbsoluteLinks;
 		}
-		$this->plugin_localization();
 	}
 
 	function init() {
 
 		if ( !defined( 'ICL_SITEPRESS_VERSION' ) || ICL_PLUGIN_INACTIVE ) {
-			if ( !function_exists( 'is_multisite' ) || !is_multisite() ) {
-				add_action( 'admin_notices', array( $this, '_no_wpml_warning' ) );
-			}
+			add_action( 'admin_notices', array( $this, '_no_wpml_warning' ) );
 		} elseif ( version_compare( ICL_SITEPRESS_VERSION, '2.0.5', '<' ) ) {
 			add_action( 'admin_notices', array( $this, '_old_wpml_warning' ) );
 		}
@@ -58,9 +46,9 @@ class WPML_Sticky_Links{
 		add_action( 'save_post', array( $this, 'save_default_urls' ), 120, 2 );
 		add_action( 'admin_head', array( $this, 'js_scripts' ) );
 
-		add_filter( 'the_content', array( $this, 'show_permalinks' ) );
+		add_filter( 'the_content', array( $this, 'show_permalinks' ), 0 );
 
-		if ( $this->settings[ 'sticky_links_widgets' ] || $this->settings[ 'sticky_links_strings' ] ) {
+		if ( $this->settings[ 'sticky_links_widgets' ] ) {
 			add_filter( 'widget_text', array( $this, 'show_permalinks' ), 99 ); // low priority - allow translation to be set
 		}
 		if ( $this->settings[ 'sticky_links_widgets' ] ) {
@@ -120,12 +108,6 @@ class WPML_Sticky_Links{
                 $this->settings['sticky_links_widgets'] = intval($_POST['icl_sticky_links_widgets']);
             } else {
                 $this->settings['sticky_links_widgets'] = 0;
-            }
-            
-            if (!empty($_POST['icl_sticky_links_strings'])) {
-                $this->settings['sticky_links_strings'] = intval($_POST['icl_sticky_links_strings']);
-            } else {
-                $this->settings['sticky_links_strings'] = 0;
             }
             
             $this->save_settings();        
@@ -424,62 +406,21 @@ class WPML_Sticky_Links{
 	}
 
 	function show_permalinks( $cont ) {
+		global $sitepress;
+		
 		if ( !isset( $GLOBALS[ '__disable_absolute_links_permalink_filter' ] ) || !$GLOBALS[ '__disable_absolute_links_permalink_filter' ] ) {
-			$home    = rtrim( get_option( 'home' ), '/' );
-			$parts   = parse_url( $home );
-			$abshome = $parts[ 'scheme' ] . '://' . $parts[ 'host' ];
-			$path    = isset( $parts[ 'path' ] ) ? ltrim( $parts[ 'path' ], '/' ) : '';
-			$tx_qvs  = join( '|', $this->absolute_links_object->taxonomies_query_vars );
-			$reg_ex  = '@<a([^>]+)?href="((' . $abshome . ')?/' . $path . '/?\?(p|page_id|cat_ID|' . $tx_qvs . ')=([0-9a-z-]+))(#?[^"]*)"([^>]+)?>@i';
-			$cont    = preg_replace_callback( $reg_ex, array( $this, 'show_permalinks_cb' ), $cont );
+			$absolute_to_permalinks = new WPML_Absolute_To_Permalinks( $sitepress );
+			$cont = $absolute_to_permalinks->convert_text( $cont );
 		}
 
 		return $cont;
 	}
 
-	function show_permalinks_cb( $matches ) {
-		global $sitepress;
-
-		$tax = false;
-		if ( isset( $this->absolute_links_object->taxonomies_query_vars ) && is_array( $this->absolute_links_object->taxonomies_query_vars ) ) {
-			$tax = array_search( $matches[ 4 ], $this->absolute_links_object->taxonomies_query_vars );
-		}
-
-		if ( $matches[ 4 ] == 'cat_ID' ) {
-			$url = get_category_link( $matches[ 5 ] );
-		} elseif ( $tax ) {
-			$url = get_term_link( $matches[ 5 ], $tax );
-		} else {
-			$url = get_permalink( $matches[ 5 ] );
-		}
-
-		if ( is_wp_error( $url ) || empty( $url ) ) {
-			return $matches[ 0 ];
-		}
-
-		$fragment = $matches[ 6 ];
-		if ( $fragment != '' ) {
-			$fragment = str_replace( '&#038;', '&', $fragment );
-			$fragment = str_replace( '&amp;', '&', $fragment );
-			if ( $fragment[ 0 ] == '&' ) {
-				if ( strpos( $url, '?' ) === false ) {
-					$fragment[ 0 ] = '?';
-				}
-			}
-		}
-
-		$trail = '';
-		if ( isset( $matches[ 7 ] ) ) {
-			$trail = $matches[ 7 ];
-		}
-
-		if ( isset( $sitepress ) && 'widget_text' == current_filter() ) {
-			$url = $sitepress->convert_url( $url );
-		}
-
-		return '<a' . $matches[ 1 ] . 'href="' . $url . $fragment . '"' . $trail . '>';
+	function convert_to_sticky_links_filter( $text ) {
+		$alp_broken_links = array();
+		return $this->absolute_links_object->_process_generic_text( $text, $alp_broken_links );
 	}
-    
+	
     function get_broken_links(){
         global $wpdb;
 		$broken_links_prepared = $wpdb->prepare( "
