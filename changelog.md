@@ -1,3 +1,12 @@
+# 1.4.0
+
+## Fixes
+* [wpmlsl-17] Fix conversion to sticky link for custom taxonomies and custom post types
+* [wpmlsl-34] Fix so anchors are not lost when converting categories to plain links
+* [wpmlsl-41] Remove Sticky Links functionality for strings
+* [wpmlsl-48] Fix problem with RTL display in admin pages when plugin is activated network wide
+* [wpmlsl-53] Fix message about WPML core not being enabled for a multisite install
+
 # 1.3.19
 
 ## Fixes
