@@ -2,16 +2,16 @@
 /*
 Plugin Name: WPML Sticky Links
 Plugin URI: https://wpml.org/
-Description: Prevents internal links from ever breaking | <a href="https://wpml.org">Documentation</a> | <a href="https://wpml.org/version/wpml-1-4-1/">WPML 1.4.1 release notes</a>
+Description: Prevents internal links from ever breaking | <a href="https://wpml.org">Documentation</a> | <a href="https://wpml.org/version/sticky-links-1-4-2/">WPML Sticky Links 1.4.2 release notes</a>
 Author: OnTheGoSystems
 Author URI: http://www.onthegosystems.com/
-Version: 1.4.1
+Version: 1.4.2
 Plugin Slug: wpml-sticky-links
 */
 
 if(defined('WPML_STICKY_LINKS_VERSION')) return;
 
-define('WPML_STICKY_LINKS_VERSION', '1.4.1');
+define('WPML_STICKY_LINKS_VERSION', '1.4.2');
 define('WPML_STICKY_LINKS_PATH', dirname(__FILE__));
 
 require WPML_STICKY_LINKS_PATH . '/inc/constants.php';
