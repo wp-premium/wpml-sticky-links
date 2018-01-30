@@ -26,7 +26,6 @@ class WPML_Sticky_Links{
 		// Check if WPML is active. If not display warning message and not load Sticky links
 
 		if ( defined( 'ICL_PLUGIN_PATH' ) ) {
-			require_once ICL_PLUGIN_PATH . '/inc/absolute-links/absolute-links.class.php';
 			$this->absolute_links_object = new AbsoluteLinks;
 		}
 	}
