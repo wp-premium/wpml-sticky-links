@@ -9,7 +9,7 @@ class WPML_Sticky_Links{
 	 */
 	var $absolute_links_object;
 
-	function __construct( $ext = false ) {
+	function __construct() {
 		$this->settings = get_option( 'alp_settings' );
 
 		$this->init_hooks();
@@ -19,10 +19,11 @@ class WPML_Sticky_Links{
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 		//init WPML_Sticky_Links after init AbsoluteLinks
 		add_action( 'init', array( $this, 'init' ), 1001 );
-		add_action( 'init', array( $this, 'plugin_localization' ) );
 	}
 
 	function plugins_loaded() {
+	  $this->plugin_localization();
+
 		// Check if WPML is active. If not display warning message and not load Sticky links
 
 		if ( defined( 'ICL_PLUGIN_PATH' ) ) {
@@ -63,7 +64,7 @@ class WPML_Sticky_Links{
 			$this->save_settings();
 		}
 
-		add_action( 'admin_menu', array( $this, 'menu' ) );
+		add_action( 'wpml_admin_menu_configure', array( $this, 'menu' ) );
 		add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ), 10, 2 );
 
 		if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
@@ -347,22 +348,29 @@ class WPML_Sticky_Links{
         </script>
         <?php
     }
-    
-    function menu(){
-	    if(!defined('ICL_PLUGIN_PATH')) return;
-		global $sitepress;
-		if(!isset($sitepress) || (method_exists($sitepress,'get_setting') && !$sitepress->get_setting( 'setup_complete' ))) return;
 
-		$top_page = apply_filters('icl_menu_main_page', basename(ICL_PLUGIN_PATH).'/menu/languages.php');
-        add_submenu_page($top_page, 
-            __('Sticky Links','wpml-sticky-links'), __('Sticky Links','wpml-sticky-links'),
-            'wpml_manage_sticky_links', 'wpml-sticky-links', array($this,'menu_content'));
-    }
-    
-    function menu_content(){
-        include WPML_STICKY_LINKS_PATH . '/menu/management.php';
-        
-    }
+	/**
+	 * @param string $menu_id
+	 */
+	function menu( $menu_id ) {
+		if ( 'WPML' !== $menu_id ) {
+			return;
+		}
+
+		$menu               = array();
+		$menu['order']      = 1000;
+		$menu['page_title'] = __( 'Sticky Links', 'wpml-sticky-links' );
+		$menu['menu_title'] = __( 'Sticky Links', 'wpml-sticky-links' );
+		$menu['capability'] = 'wpml_manage_sticky_links';
+		$menu['menu_slug']  = 'wpml-sticky-links';
+		$menu['function']   = array( $this, 'menu_content' );
+
+		do_action( 'wpml_admin_menu_register_item', $menu );
+	}
+
+	function menu_content() {
+		include WPML_STICKY_LINKS_PATH . '/menu/management.php';
+	}
 
 	function pre_update_option_widget_text( $new_value, $old_value ) {
 		global $sitepress;
