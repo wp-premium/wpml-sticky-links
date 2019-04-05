@@ -9,6 +9,4 @@ return array(
     'WPML_Cache_Directory' => $vendorDir . '/wpml-shared/wpml-lib-cache/src/cache/class-wpml-cache-directory.php',
     'WPML_Dependencies' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-dependencies.php',
     'WPML_Sticky_Links' => $baseDir . '/classes/class-wpml-sticky-links.php',
-    'xrstf\\Composer52\\AutoloadGenerator' => $vendorDir . '/xrstf/composer-php52/lib/xrstf/Composer52/AutoloadGenerator.php',
-    'xrstf\\Composer52\\Generator' => $vendorDir . '/xrstf/composer-php52/lib/xrstf/Composer52/Generator.php',
 );
