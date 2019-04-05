@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit347c322daba7fc755ea6154cdf6c3991
+class ComposerStaticInit442796edcf914d0f272b88b62bbea712
 {
     public static $prefixesPsr0 = array (
         'x' => 
@@ -20,15 +20,13 @@ class ComposerStaticInit347c322daba7fc755ea6154cdf6c3991
         'WPML_Cache_Directory' => __DIR__ . '/..' . '/wpml-shared/wpml-lib-cache/src/cache/class-wpml-cache-directory.php',
         'WPML_Dependencies' => __DIR__ . '/..' . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-dependencies.php',
         'WPML_Sticky_Links' => __DIR__ . '/../..' . '/classes/class-wpml-sticky-links.php',
-        'xrstf\\Composer52\\AutoloadGenerator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/AutoloadGenerator.php',
-        'xrstf\\Composer52\\Generator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/Generator.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixesPsr0 = ComposerStaticInit347c322daba7fc755ea6154cdf6c3991::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit347c322daba7fc755ea6154cdf6c3991::$classMap;
+            $loader->prefixesPsr0 = ComposerStaticInit442796edcf914d0f272b88b62bbea712::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit442796edcf914d0f272b88b62bbea712::$classMap;
 
         }, null, ClassLoader::class);
     }

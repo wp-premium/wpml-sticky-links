@@ -2,6 +2,9 @@
   
   
 class WPML_Sticky_Links{
+
+	const MENU_SLUG = 'wpml-sticky-links';
+
     var $settings;
     var $broken_links;
 	/**
@@ -68,8 +71,7 @@ class WPML_Sticky_Links{
 		add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ), 10, 2 );
 
 		if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
-			add_action( 'admin_print_scripts', array( $this, 'admin_print_scripts' ) );
-			add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_resources' ) );
 		}
 
 		add_action( 'wp_ajax_wpml_sticky_links_save_options', array( $this, '_save_options' ) );
@@ -79,17 +81,27 @@ class WPML_Sticky_Links{
 
 	}
 
-	function admin_print_styles() {
-		wp_enqueue_style('wpml-sticky-links-css', WPML_STICKY_LINKS_URL . '/res/css/management.css', array(), WPML_STICKY_LINKS_VERSION);
-	}
+	/**
+	 * @param string $hook
+	 */
+	function enqueue_admin_resources( $hook ) {
+		if ( 'wpml_page_' . self::MENU_SLUG === $hook ) {
+			wp_enqueue_script(
+				'wpml-sticky-links-js',
+				WPML_STICKY_LINKS_URL . '/res/js/scripts.js',
+				array( 'jquery' ),
+				WPML_STICKY_LINKS_VERSION
+			);
 
-	function admin_print_scripts() {
-		wp_enqueue_script('wpml-sticky-links-js', WPML_STICKY_LINKS_URL . '/res/js/scripts.js', array('jquery'), WPML_STICKY_LINKS_VERSION);
+			$wpml_sticky_links_ajax_loader_img_src = WPML_STICKY_LINKS_URL . 'res/img/ajax-loader.gif';
+			$wpml_sticky_links_ajax_loader_img = '<img src="' . $wpml_sticky_links_ajax_loader_img_src . '" alt="loading" width="16" height="16" />';
 
-		$wpml_sticky_links_ajax_loader_img_src = WPML_STICKY_LINKS_URL . 'res/img/ajax-loader.gif';
-		$wpml_sticky_links_ajax_loader_img = '<img src="' . $wpml_sticky_links_ajax_loader_img_src . '" alt="loading" width="16" height="16" />';
-
-		wp_localize_script('wpml-sticky-links-js', 'data', array( 'wpml_sticky_links_ajax_loader_img' => $wpml_sticky_links_ajax_loader_img ));
+			wp_localize_script(
+				'wpml-sticky-links-js',
+				'data',
+				array( 'wpml_sticky_links_ajax_loader_img' => $wpml_sticky_links_ajax_loader_img )
+			);
+		}
 	}
     
     function _no_wpml_warning(){
@@ -362,7 +374,7 @@ class WPML_Sticky_Links{
 		$menu['page_title'] = __( 'Sticky Links', 'wpml-sticky-links' );
 		$menu['menu_title'] = __( 'Sticky Links', 'wpml-sticky-links' );
 		$menu['capability'] = 'wpml_manage_sticky_links';
-		$menu['menu_slug']  = 'wpml-sticky-links';
+		$menu['menu_slug']  = self::MENU_SLUG;
 		$menu['function']   = array( $this, 'menu_content' );
 
 		do_action( 'wpml_admin_menu_register_item', $menu );
