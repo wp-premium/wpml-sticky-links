@@ -15,6 +15,10 @@ class WPML_Sticky_Links{
 	function __construct() {
 		$this->settings = get_option( 'alp_settings' );
 
+		if ( ! isset( $this->settings['sticky_links_widgets'] ) ) {
+			$this->settings['sticky_links_widgets'] = 0;
+		}
+
 		$this->init_hooks();
 	}
 
@@ -55,11 +59,9 @@ class WPML_Sticky_Links{
 
 		add_filter( 'the_content', array( $this, 'show_permalinks' ), 0 );
 
-		if ( $this->settings[ 'sticky_links_widgets' ] ) {
-			add_filter( 'widget_text', array( $this, 'show_permalinks' ), 99 ); // low priority - allow translation to be set
-		}
-		if ( $this->settings[ 'sticky_links_widgets' ] ) {
-			add_filter( 'pre_update_option_widget_text', array( $this, 'pre_update_option_widget_text' ), 5, 2 );
+		if ( (bool) $this->settings['sticky_links_widgets'] ) {
+			add_filter( 'widget_text', [ $this, 'show_permalinks' ], 99 ); // Low priority - allow translation to be set.
+			add_filter( 'pre_update_option_widget_text', [ $this, 'pre_update_option_widget_text' ], 5, 2 );
 		}
 
 		if ( empty( $this->settings ) && !empty( $sitepress_settings[ 'modules' ][ 'absolute-links' ] ) ) {
