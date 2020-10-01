@@ -4,18 +4,20 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0677379ded939470e068624a52464047
+class ComposerStaticInit9dd16af9b766bd96e1e8f9d74d54dcab
 {
     public static $classMap = array (
-        'WPML_Cache_Directory' => __DIR__ . '/..' . '/wpml-shared/wpml-lib-cache/src/cache/class-wpml-cache-directory.php',
+        'WPML\\SL\\CustomFields' => __DIR__ . '/../..' . '/classes/custom-fields.php',
+        'WPML_Core_Version_Check' => __DIR__ . '/..' . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-core-version-check.php',
         'WPML_Dependencies' => __DIR__ . '/..' . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-dependencies.php',
+        'WPML_PHP_Version_Check' => __DIR__ . '/..' . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-php-version-check.php',
         'WPML_Sticky_Links' => __DIR__ . '/../..' . '/classes/class-wpml-sticky-links.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit0677379ded939470e068624a52464047::$classMap;
+            $loader->classMap = ComposerStaticInit9dd16af9b766bd96e1e8f9d74d54dcab::$classMap;
 
         }, null, ClassLoader::class);
     }
