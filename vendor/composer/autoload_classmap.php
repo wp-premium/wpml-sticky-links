@@ -6,7 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'WPML_Cache_Directory' => $vendorDir . '/wpml-shared/wpml-lib-cache/src/cache/class-wpml-cache-directory.php',
+    'WPML\\SL\\CustomFields' => $baseDir . '/classes/custom-fields.php',
+    'WPML_Core_Version_Check' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-core-version-check.php',
     'WPML_Dependencies' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-dependencies.php',
+    'WPML_PHP_Version_Check' => $vendorDir . '/wpml-shared/wpml-lib-dependencies/src/dependencies/class-wpml-php-version-check.php',
     'WPML_Sticky_Links' => $baseDir . '/classes/class-wpml-sticky-links.php',
 );
